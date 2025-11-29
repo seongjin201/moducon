@@ -41,9 +41,9 @@
         (function frame() {
             // 왼쪽 아래에서 터짐
             confetti({
-                particleCount: 10,
+                particleCount: 4,
                 angle: 60,
-                spread: 55,
+                spread: 40,
                 origin: { x: 0, y: 1 },
                 colors: [randomColor()],
                 shapes: ['star', 'circle']
@@ -64,6 +64,9 @@
                 requestAnimationFrame(frame);
             }
         })();
+         if (Date.now() < end) {
+                setTimeout(frame, 150);  // 🔥 150ms 간격 → 천천히, 부드럽게
+            }
     }
 
     // 페이지 들어오면 자동 실행
