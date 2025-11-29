@@ -21,8 +21,8 @@
 </div>
     
 <div class="img-actions">
-    <button class="save-btn" onclick="saveImage()">이미지 저장</button>
-    <button class="share-btn" onclick="shareToInstagram()">이미지 공유</button>
+    <button class="save-btn" onclick="saveHighQuality()">이미지 저장</button>
+    <button class="share-btn" onclick="shareHighQualityToInsta()">이미지 공유</button>
 </div>
 
 <!-- Confetti 라이브러리 -->
@@ -88,45 +88,77 @@ function getMobileOS() {
 
     return "other";
 }
+/* -------------------------------------------------
+   고퀄 카드 생성 (1080x1920)
+-------------------------------------------------- */
+async function generateHighQualityCard(username) {
 
-/* ---------------------------
-   2) 화면 캡쳐 → base64 이미지 생성
----------------------------- */
-async function captureScreen() {
-    const canvas = await html2canvas(document.body);
+    // 1080x1920 인스타 스토리 규격 캔버스 생성
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1920;
+
+    const ctx = canvas.getContext("2d");
+
+    // 배경 이미지 로드
+    const bgImg = new Image();
+    bgImg.src = "img/moducon-card.png";
+
+    await new Promise(resolve => {
+        bgImg.onload = resolve;
+    });
+
+    // 배경 꽉 채워 그리기 (cover 방식)
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+
+    // 텍스트 스타일
+    ctx.fillStyle = "white";
+    ctx.font = "bold 80px Pretendard";
+    ctx.textAlign = "center";
+    ctx.shadowColor = "rgba(0,0,0,0.5)";
+    ctx.shadowBlur = 15;
+
+    // 텍스트 그리기
+    ctx.fillText(`${username}님 환영합니다!`, 540, 1650);
+
+    // PNG 생성
     return canvas.toDataURL("image/png");
 }
-
 /* ---------------------------
-   3) 이미지 저장 기능
+   3. savecapture대신 활용
 ---------------------------- */
-async function saveCapture() {
-    const image = await captureScreen();
+async function saveHighQuality() {
+    const canvasImage = await generateHighQualityCard(username);
 
     const link = document.createElement("a");
-    link.href = image;
-    link.download = "moducon-result.png";
+    link.href = canvasImage;
+    link.download = "moducon-card.png";
     link.click();
 }
+
 
 /* ---------------------------
    4) 공유하기 (인스타 스토리)
 ---------------------------- */
-async function shareToInsta() {
+async function shareHighQualityToInsta() {
     const os = getMobileOS();
-    const image = await captureScreen();
+    const imgData = await generateHighQualityCard(username);
 
     if (os === "ios") {
-        alert("📸 이미지가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
-        saveCapture();
+        // iOS는 저장 후 스토리 실행
+        const link = document.createElement("a");
+        link.href = imgData;
+        link.download = "moducon-card.png";
+        link.click();
+
+        alert("📸 고퀄 카드가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
         window.location.href = "instagram://story-camera";
     } 
     else if (os === "android") {
-        alert("📸 인스타그램 스토리 화면으로 이동합니다!");
+        alert("📸 인스타 스토리 화면으로 이동합니다!");
         window.location.href = "instagram://story-camera";
-    } 
-    else {
-        alert("⚠️ 모바일 환경에서만 스토리 공유가 가능합니다.");
+    } else {
+        alert("⚠️ 모바일 환경에서만 공유 가능합니다.");
     }
 }
 </script>
