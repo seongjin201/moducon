@@ -93,48 +93,51 @@ function getMobileOS() {
 -------------------------------------------------- */
 async function generateHighQualityCard(username) {
 
-    // 1080x1920 인스타 스토리 규격 캔버스 생성
+    // 1) 인스타 1080 x 1920 비율 캔버스
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
     canvas.height = 1920;
-
     const ctx = canvas.getContext("2d");
 
-    // 배경 이미지 로드
+    // 2) 이미지 fetch로 불러오기 (CORS 해결)
+    const response = await fetch("img/moducon-card.png");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
     const bgImg = new Image();
-    bgImg.src = "img/moducon-card.png";
+    bgImg.src = url;
 
-    await new Promise(resolve => {
-        bgImg.onload = resolve;
-    });
+    // 3) 이미지 로딩 완료까지 기다림
+    await new Promise(resolve => bgImg.onload = resolve);
 
-    // 배경 꽉 채워 그리기 (cover 방식)
+    // 4) 배경 꽉 채워 그리기
     ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
-    // 텍스트 스타일
+    // 5) 텍스트 스타일
     ctx.fillStyle = "white";
-    ctx.font = "bold 80px Pretendard";
+    ctx.font = "bold 80px Pretendard, sans-serif";
     ctx.textAlign = "center";
-    ctx.shadowColor = "rgba(0,0,0,0.5)";
-    ctx.shadowBlur = 15;
+    ctx.shadowColor = "rgba(0,0,0,0.4)";
+    ctx.shadowBlur = 12;
 
-    // 텍스트 그리기
+    // 6) 텍스트 넣기
     ctx.fillText(`${username}님 환영합니다!`, 540, 1650);
 
-    // PNG 생성
+    // 7) PNG 데이터 반환
     return canvas.toDataURL("image/png");
 }
 /* ---------------------------
    3. savecapture대신 활용
 ---------------------------- */
 async function saveHighQuality() {
-    const canvasImage = await generateHighQualityCard(username);
+    const imgData = await generateHighQualityCard(username);
 
     const link = document.createElement("a");
-    link.href = canvasImage;
+    link.href = imgData;
     link.download = "moducon-card.png";
     link.click();
 }
+
 
 
 /* ---------------------------
