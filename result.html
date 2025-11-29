@@ -6,6 +6,8 @@
 <title>환영합니다!</title>
 
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </head>
 
 <body>
@@ -75,30 +77,57 @@
         startConfetti();
     };
 
-function saveImage() {
-    const imgPath = "img/moducon-card.png";
-    const link = document.createElement('a');
-    link.href = imgPath;
-    link.download = "moducon-card.png"; 
+/* ---------------------------
+   1) 모바일 OS 감지
+---------------------------- */
+function getMobileOS() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/android/i.test(userAgent)) return "android";
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return "ios";
+
+    return "other";
+}
+
+/* ---------------------------
+   2) 화면 캡쳐 → base64 이미지 생성
+---------------------------- */
+async function captureScreen() {
+    const canvas = await html2canvas(document.body);
+    return canvas.toDataURL("image/png");
+}
+
+/* ---------------------------
+   3) 이미지 저장 기능
+---------------------------- */
+async function saveCapture() {
+    const image = await captureScreen();
+
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "moducon-result.png";
     link.click();
 }
 
-function shareToInstagram() {
-    const imgURL = "img/moducon-card.png";
+/* ---------------------------
+   4) 공유하기 (인스타 스토리)
+---------------------------- */
+async function shareToInsta() {
+    const os = getMobileOS();
+    const image = await captureScreen();
 
-    fetch(imgURL)
-        .then(res => res.blob())
-        .then(blob => {
-            const file = new File([blob], "moducon-card.png", {type: "image/png"});
-
-            navigator.clipboard.writeText(window.location.href);
-
-            alert("📸 인스타그램 스토리로 이동합니다!");
-            window.location.href = "instagram://story-camera";
-        })
-        .catch(() => {
-            alert("⚠️ 현재 브라우저는 인스타 공유를 지원하지 않습니다.");
-        });
+    if (os === "ios") {
+        alert("📸 이미지가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
+        saveCapture();
+        window.location.href = "instagram://story-camera";
+    } 
+    else if (os === "android") {
+        alert("📸 인스타그램 스토리 화면으로 이동합니다!");
+        window.location.href = "instagram://story-camera";
+    } 
+    else {
+        alert("⚠️ 모바일 환경에서만 스토리 공유가 가능합니다.");
+    }
 }
 </script>
 
