@@ -53,4 +53,24 @@
             confetti({
                 particleCount: 10,
                 angle: 120,
-                spread:
+                spread: 55,
+                origin: { x: 1, y: 1 },
+                colors: [randomColor()],
+                shapes: ['star', 'circle']
+            });
+
+            // 7초 동안 반복
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        })();
+    }
+
+    // 페이지 들어오면 자동 실행
+    window.onload = () => {
+        startConfetti();
+    };
+</script>
+
+</body>
+</html>
