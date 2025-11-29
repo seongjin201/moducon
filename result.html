@@ -29,207 +29,141 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-    /* 이름 표시 */
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get("name");
-    document.getElementById("welcome").innerText = `${username}님 환영합니다!`;
-
-    /* 랜덤 색상 */
-    function randomColor() {
-        const colors = ['#ff577f', '#ff884b', '#ffd93d', '#9dff99', '#6ecbff', '#c77dff'];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-
-    /* 7초 동안 천천히 폭죽 */
-    function startConfetti() {
-        const duration = 7000;
-        const end = Date.now() + duration;
-
-        function frame() {
-            confetti({
-                particleCount: 4,
-                angle: 60,
-                spread: 35,
-                origin: { x: 0.1, y: 1 },
-                colors: [randomColor()],
-                shapes: ['star']
-            });
-
-            confetti({
-                particleCount: 4,
-                angle: 120,
-                spread: 35,
-                origin: { x: 0.9, y: 1 },
-                colors: [randomColor()],
-                shapes: ['star']
-            });
-
-            if (Date.now() < end) {
-                setTimeout(frame, 150);  // 천천히 반복
-            }
-        }
-
-        frame();
-    }
-
-    /* 페이지 로딩 시 자동 실행 */
-    window.onload = () => {
-        startConfetti();
-    };
+/* ---------------------------
+   이름 표시
+---------------------------- */
+const params = new URLSearchParams(window.location.search);
+const username = params.get("name");
+document.getElementById("welcome").innerText = `${username}님 환영합니다!`;
 
 /* ---------------------------
-   1) 모바일 OS 감지
+   폭죽
+---------------------------- */
+function randomColor() {
+    const colors = ['#ff577f', '#ff884b', '#ffd93d', '#9dff99', '#6ecbff', '#c77dff'];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+function startConfetti() {
+    const duration = 7000;
+    const end = Date.now() + duration;
+
+    function frame() {
+        confetti({
+            particleCount: 4,
+            angle: 60,
+            spread: 35,
+            origin: { x: 0.1, y: 1 },
+            colors: [randomColor()],
+            shapes: ['star']
+        });
+        confetti({
+            particleCount: 4,
+            angle: 120,
+            spread: 35,
+            origin: { x: 0.9, y: 1 },
+            colors: [randomColor()],
+            shapes: ['star']
+        });
+        if (Date.now() < end) setTimeout(frame, 150);
+    }
+
+    frame();
+}
+window.onload = startConfetti;
+
+/* ---------------------------
+   모바일 OS 감지
 ---------------------------- */
 function getMobileOS() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
     if (/android/i.test(userAgent)) return "android";
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return "ios";
-
     return "other";
 }
-/* -------------------------------------------------
-   고퀄 카드 생성 (1080x1920)
--------------------------------------------------- */
-async function generateHighQualityCard(username) {
 
-    // 1) 인스타 1080 x 1920 비율 캔버스
-    const canvas = document.createElement("canvas");
-    canvas.width = 1080;
-    canvas.height = 1920;
-    const ctx = canvas.getContext("2d");
-
-    // 2) 이미지 fetch로 불러오기 (CORS 해결)
-    const response = await fetch("img/moducon-card.png");
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-
-    const bgImg = new Image();
-    bgImg.src = url;
-
-    // 3) 이미지 로딩 완료까지 기다림
-    await new Promise(resolve => bgImg.onload = resolve);
-
-    // 4) 배경 꽉 채워 그리기
-    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-
-    // 5) 텍스트 스타일
-    ctx.fillStyle = "white";
-    ctx.font = "bold 80px Pretendard, sans-serif";
-    ctx.textAlign = "center";
-    ctx.shadowColor = "rgba(0,0,0,0.4)";
-    ctx.shadowBlur = 12;
-
-    // 6) 텍스트 넣기
-    ctx.fillText(`${username}님 환영합니다!`, 540, 1650);
-
-    // 7) PNG 데이터 반환
-    return canvas.toDataURL("image/png");
-}
-/* ---------------------------
-   3. savecapture대신 활용
----------------------------- */
 /* ---------------------------
    (A) result 화면 그대로 저장
 ---------------------------- */
 async function saveResultScreen() {
-
-    const element = document.body; // 전체 화면 캡쳐
-    
+    const element = document.body;
     const canvas = await html2canvas(element, {
         useCORS: true,
-        scale: 2  // 고해상도
+        scale: 2
     });
 
     const imgData = canvas.toDataURL("image/png");
-
     const os = getMobileOS();
 
     if (os === "ios") {
-        // iOS는 a.download 를 막음 → 새창 열어 저장 유도
         alert("📱 iPhone 사용자는 이미지를 길게 눌러 '사진에 저장' 해주세요!");
         const win = window.open();
         win.document.write('<img src="' + imgData + '" style="width:100%;"/>');
         return;
     }
 
-    // Android 자동 다운로드
     const link = document.createElement("a");
     link.href = imgData;
     link.download = "moducon-result.png";
     link.click();
 }
 
-
-
-
-/* -----------------------------------------------
-   (B) 인스타 스토리용 카드 생성
------------------------------------------------- */
+/* ---------------------------
+   (B) 인스타 스토리용 카드生成
+---------------------------- */
 async function generateStoryCard(username) {
 
-    // 날짜 (예: 2025. 02. 15)
     const today = new Date();
     const dateStr = `${today.getFullYear()}. ${today.getMonth()+1}. ${today.getDate()}`;
 
-    // 1080x1920 캔버스
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext("2d");
 
-    /* 1) 그라데이션 배경 */
     const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
     gradient.addColorStop(0, "#FFB078");
     gradient.addColorStop(1, "#FFAABF");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 1080, 1920);
 
-    /* 2) moducon-card PNG 로드 (fetch 방식: CORS 해결) */
     const response = await fetch("img/moducon-card.png");
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
 
-    const bgImg = new Image();
-    bgImg.src = url;
+    const banner = new Image();
+    banner.src = url;
+    await new Promise(resolve => banner.onload = resolve);
 
-    await new Promise(resolve => bgImg.onload = resolve);
-
-    /* 3) 이미지 비율 유지하며 중앙 배치 */
     const maxWidth = 900;
-    const ratio = maxWidth / bgImg.width;
-    const newHeight = bgImg.height * ratio;
+    const ratio = maxWidth / banner.width;
+    const newHeight = banner.height * ratio;
     const x = (1080 - maxWidth) / 2;
     const y = 600;
 
-    ctx.drawImage(bgImg, x, y, maxWidth, newHeight);
+    ctx.drawImage(banner, x, y, maxWidth, newHeight);
 
-    /* 4) 텍스트: 이름 */
     ctx.fillStyle = "white";
     ctx.font = "bold 80px Pretendard, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(`${username}님 환영합니다!`, 540, 1550);
 
-    /* 5) 텍스트: 날짜 */
     ctx.font = "bold 50px Pretendard, sans-serif";
     ctx.fillText(dateStr, 540, 1650);
 
     return canvas.toDataURL("image/png");
 }
-/* -----------------------------------------------
-   (C) 인스타 스토리 공유
------------------------------------------------- */
-async function shareStoryCardToInsta() {
 
+/* ---------------------------
+   (C) 인스타 공유
+---------------------------- */
+async function shareStoryCardToInsta() {
     const imgData = await generateStoryCard(username);
     const os = getMobileOS();
 
     if (os === "ios") {
         alert("📸 카드가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
-
         const win = window.open();
         win.document.write('<img src="' + imgData + '" style="width:100%;"/>');
-
         window.location.href = "instagram://story-camera";
     } 
     else if (os === "android") {
