@@ -11,9 +11,13 @@
 
 <body>
 
-    <h1 id="welcome"></h1>
+    <div class="top-section">
+        <h1 id="welcome"></h1>
+    </div>
 
-    <img src="img/moducon-card.png" alt="모두콘 이미지">
+    <div class="bottom-section">
+        <img src="img/moducon-card.png" alt="모두콘 이미지">
+    </div>
 
 <script>
 const params = new URLSearchParams(window.location.search);
@@ -22,4 +26,5 @@ document.getElementById("welcome").innerText = `${username}님 환영합니다!`
 </script>
 
 </body>
+
 </html>
