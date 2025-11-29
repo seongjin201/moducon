@@ -1,5 +1,68 @@
+/* ▷ 모든 페이지 공통 스타일 */
 body {
     margin: 0;
-    background: linear-gradient(135deg, #ff9170, #ffcf7f, #ff6680);
     font-family: 'Pretendard', sans-serif;
+    background: linear-gradient(135deg, #ff9170, #ffcf7f, #ff6680);
+    min-height: 100vh;
+    text-align: center;
+    color: white;
+    animation: bgmove 6s infinite alternate ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes bgmove {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(30deg); }
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+}
+
+/* 제목 */
+h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* 입력창 */
+input {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+/* 버튼 */
+button {
+    width: 100%;
+    padding: 14px;
+    background: black;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.97);
+    background: #333;
+}
+
+/* 결과 이미지 */
+img {
+    width: 90%;
+    max-width: 400px;
+    margin-top: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.4);
 }
