@@ -21,8 +21,8 @@
 </div>
     
 <div class="img-actions">
-    <button class="save-btn" onclick="saveHighQuality()">이미지 저장</button>
-    <button class="share-btn" onclick="shareHighQualityToInsta()">이미지 공유</button>
+    <button class="save-btn" onclick="saveResultScreen()">이미지 저장</button>
+    <button class="share-btn" onclick="shareStoryCardToInsta()">이미지 공유</button>
 </div>
 
 <!-- Confetti 라이브러리 -->
@@ -129,41 +129,118 @@ async function generateHighQualityCard(username) {
 /* ---------------------------
    3. savecapture대신 활용
 ---------------------------- */
-async function saveHighQuality() {
-    const imgData = await generateHighQualityCard(username);
+/* ---------------------------
+   (A) result 화면 그대로 저장
+---------------------------- */
+async function saveResultScreen() {
 
+    const element = document.body; // 전체 화면 캡쳐
+    
+    const canvas = await html2canvas(element, {
+        useCORS: true,
+        scale: 2  // 고해상도
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+
+    const os = getMobileOS();
+
+    if (os === "ios") {
+        // iOS는 a.download 를 막음 → 새창 열어 저장 유도
+        alert("📱 iPhone 사용자는 이미지를 길게 눌러 '사진에 저장' 해주세요!");
+        const win = window.open();
+        win.document.write('<img src="' + imgData + '" style="width:100%;"/>');
+        return;
+    }
+
+    // Android 자동 다운로드
     const link = document.createElement("a");
     link.href = imgData;
-    link.download = "moducon-card.png";
+    link.download = "moducon-result.png";
     link.click();
 }
 
 
 
-/* ---------------------------
-   4) 공유하기 (인스타 스토리)
----------------------------- */
-async function shareHighQualityToInsta() {
+
+/* -----------------------------------------------
+   (B) 인스타 스토리용 카드 생성
+------------------------------------------------ */
+async function generateStoryCard(username) {
+
+    // 날짜 (예: 2025. 02. 15)
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}. ${today.getMonth()+1}. ${today.getDate()}`;
+
+    // 1080x1920 캔버스
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext("2d");
+
+    /* 1) 그라데이션 배경 */
+    const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
+    gradient.addColorStop(0, "#FFB078");
+    gradient.addColorStop(1, "#FFAABF");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    /* 2) moducon-card PNG 로드 (fetch 방식: CORS 해결) */
+    const response = await fetch("img/moducon-card.png");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    const bgImg = new Image();
+    bgImg.src = url;
+
+    await new Promise(resolve => bgImg.onload = resolve);
+
+    /* 3) 이미지 비율 유지하며 중앙 배치 */
+    const maxWidth = 900;
+    const ratio = maxWidth / bgImg.width;
+    const newHeight = bgImg.height * ratio;
+    const x = (1080 - maxWidth) / 2;
+    const y = 600;
+
+    ctx.drawImage(bgImg, x, y, maxWidth, newHeight);
+
+    /* 4) 텍스트: 이름 */
+    ctx.fillStyle = "white";
+    ctx.font = "bold 80px Pretendard, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`${username}님 환영합니다!`, 540, 1550);
+
+    /* 5) 텍스트: 날짜 */
+    ctx.font = "bold 50px Pretendard, sans-serif";
+    ctx.fillText(dateStr, 540, 1650);
+
+    return canvas.toDataURL("image/png");
+}
+/* -----------------------------------------------
+   (C) 인스타 스토리 공유
+------------------------------------------------ */
+async function shareStoryCardToInsta() {
+
+    const imgData = await generateStoryCard(username);
     const os = getMobileOS();
-    const imgData = await generateHighQualityCard(username);
 
     if (os === "ios") {
-        // iOS는 저장 후 스토리 실행
-        const link = document.createElement("a");
-        link.href = imgData;
-        link.download = "moducon-card.png";
-        link.click();
+        alert("📸 카드가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
 
-        alert("📸 고퀄 카드가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
+        const win = window.open();
+        win.document.write('<img src="' + imgData + '" style="width:100%;"/>');
+
         window.location.href = "instagram://story-camera";
     } 
     else if (os === "android") {
-        alert("📸 인스타 스토리 화면으로 이동합니다!");
+        alert("📸 인스타그램 스토리 화면으로 이동합니다!");
         window.location.href = "instagram://story-camera";
-    } else {
-        alert("⚠️ 모바일 환경에서만 공유 가능합니다.");
+    } 
+    else {
+        alert("⚠️ 모바일에서만 공유 가능합니다.");
     }
 }
+
 </script>
 
 </body>
