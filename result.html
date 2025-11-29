@@ -74,6 +74,32 @@
     window.onload = () => {
         startConfetti();
     };
+
+function saveImage() {
+    const imgPath = "img/moducon-card.png";
+    const link = document.createElement('a');
+    link.href = imgPath;
+    link.download = "moducon-card.png"; 
+    link.click();
+}
+
+function shareToInstagram() {
+    const imgURL = "img/moducon-card.png";
+
+    fetch(imgURL)
+        .then(res => res.blob())
+        .then(blob => {
+            const file = new File([blob], "moducon-card.png", {type: "image/png"});
+
+            navigator.clipboard.writeText(window.location.href);
+
+            alert("📸 인스타그램 스토리로 이동합니다!");
+            window.location.href = "instagram://story-camera";
+        })
+        .catch(() => {
+            alert("⚠️ 현재 브라우저는 인스타 공유를 지원하지 않습니다.");
+        });
+}
 </script>
 
 </body>
