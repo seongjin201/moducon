@@ -22,54 +22,50 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-    // 이름 표시 (단 한 번 수행)
+    /* ✨ 이름 표시 */
     const params = new URLSearchParams(window.location.search);
     const username = params.get("name");
     document.getElementById("welcome").innerText = `${username}님 환영합니다!`;
 
-    // 랜덤 색상
+    /* ✨ 랜덤 색상 */
     function randomColor() {
         const colors = ['#ff577f', '#ff884b', '#ffd93d', '#9dff99', '#6ecbff', '#c77dff'];
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    // 7초 동안 연속 폭죽
+    /* ✨ 7초 동안 천천히 폭죽 */
     function startConfetti() {
-        const duration = 7000; // 7초
+        const duration = 7000;
         const end = Date.now() + duration;
 
-        (function frame() {
-            // 왼쪽 아래에서 터짐
+        function frame() {
             confetti({
                 particleCount: 4,
                 angle: 60,
-                spread: 40,
-                origin: { x: 0, y: 1 },
+                spread: 35,
+                origin: { x: 0.1, y: 1 },
                 colors: [randomColor()],
-                shapes: ['star', 'circle']
+                shapes: ['star']
             });
 
-            // 오른쪽 아래에서 터짐
             confetti({
-                particleCount: 10,
+                particleCount: 4,
                 angle: 120,
-                spread: 55,
-                origin: { x: 1, y: 1 },
+                spread: 35,
+                origin: { x: 0.9, y: 1 },
                 colors: [randomColor()],
-                shapes: ['star', 'circle']
+                shapes: ['star']
             });
 
-            // 7초 동안 반복
             if (Date.now() < end) {
-                requestAnimationFrame(frame);
+                setTimeout(frame, 150);  // 천천히 반복
             }
-        })();
-         if (Date.now() < end) {
-                setTimeout(frame, 150);  // 🔥 150ms 간격 → 천천히, 부드럽게
-            }
+        }
+
+        frame();
     }
 
-    // 페이지 들어오면 자동 실행
+    /* ✨ 페이지 로딩 시 자동 실행 */
     window.onload = () => {
         startConfetti();
     };
