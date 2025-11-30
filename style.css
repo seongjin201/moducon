@@ -252,5 +252,13 @@ img {
 .ios-close-btn {
     background: #ddd;
 }
+#iosPreviewModal {
+    z-index: 200000 !important;
+}
+.ios-preview-modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
 
 
