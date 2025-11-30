@@ -178,27 +178,30 @@ img {
     font-size: 15px;
     color: #555;
 }
-/* 오른쪽 상단 고정 닫기 버튼 */
+/* 오른쪽 상단 고정 닫기 버튼 (모바일 최적화) */
 .map-close-btn {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 18px;
+    right: 18px;
     z-index: 10000;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    font-size: 24px;
+    width: 46px;
+    height: 46px;
+    background: white;               /* ✔ 하얀 배경 */
+    color: black;                    /* ✔ 검정 X */
+    border-radius: 50%;              /* 둥근 버튼 */
+    font-size: 28px;                 /* 굵고 크게 */
+    font-weight: bold;               /* 더 선명하게 */
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     user-select: none;
+    box-shadow: 0 0 12px rgba(0,0,0,0.25); /* ✔ 그림자 → 모바일에서 잘 보임 */
 }
 
-/* 닫기 버튼 누를 때 애니메이션 */
+/* 닫기 버튼 누를 때 살짝 줄어드는 애니메이션 */
 .map-close-btn:active {
-    transform: scale(0.9);
+    transform: scale(0.88);
 }
+
 
