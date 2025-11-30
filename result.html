@@ -50,6 +50,15 @@
         <div class="slide-index" id="mapIndex">1 / 6</div>
     </div>
 </div>
+<!-- iOS 이미지 미리보기 모달 -->
+<div id="iosPreviewModal" class="ios-preview-modal">
+    <div class="ios-preview-content">
+        <p class="ios-preview-text">📎 아래 이미지를 꾹 눌러 저장한 뒤 인스타 스토리에서 불러와주세요!</p>
+        <img id="iosPreviewImg" src="" class="ios-preview-img">
+        <button class="ios-open-insta" onclick="openInstagram()">인스타그램 열기</button>
+        <button class="ios-close-btn" onclick="closeIOSPreview()">닫기</button>
+    </div>
+</div>
 
 <!-- Confetti 라이브러리 -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -183,23 +192,32 @@ async function generateStoryCard(username) {
    (C) 인스타 공유
 ---------------------------- */
 async function shareStoryCardToInsta() {
-    const imgData = await generateStoryCard(username);
     const os = getMobileOS();
+    const imgData = await generateStoryCard(username);
 
+    // iOS 처리: 인스타 바로 이동 금지
     if (os === "ios") {
-        alert("📸 카드가 저장됩니다. 인스타 스토리에서 불러오기 해주세요!");
-        const win = window.open();
-        win.document.write('<img src="' + imgData + '" style="width:100%;"/>');
-        window.location.href = "instagram://story-camera";
-    } 
-    else if (os === "android") {
+        // 이미지 미리보기 모달 표시
+        document.getElementById("iosPreviewImg").src = imgData;
+        document.getElementById("iosPreviewModal").style.display = "block";
+        return;
+    }
+
+    // Android는 기존처럼 인스타 바로 이동
+    if (os === "android") {
         alert("📸 인스타그램 스토리 화면으로 이동합니다!");
         window.location.href = "instagram://story-camera";
-    } 
-    else {
-        alert("⚠️ 모바일에서만 공유 가능합니다.");
+    } else {
+        alert("⚠️ 모바일 환경에서만 공유 가능합니다.");
     }
 }
+function closeIOSPreview() {
+    document.getElementById("iosPreviewModal").style.display = "none";
+}
+function openInstagram() {
+    window.location.href = "instagram://story-camera";
+}
+
 /* ---------------------------------------
    지도 슬라이드 데이터 (6장)
 ---------------------------------------- */
