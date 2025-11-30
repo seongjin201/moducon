@@ -24,6 +24,29 @@
     <button class="save-btn" onclick="saveResultScreen()">이미지 저장</button>
     <button class="share-btn" onclick="shareStoryCardToInsta()">이미지 공유</button>
 </div>
+<!-- 지도 | 약도 보기 작은 버튼 -->
+<div class="floating-map-btn" onclick="openMapSlider()">
+    📍 지도 보기
+</div>
+
+<!-- 슬라이드 팝업 -->
+<div id="mapSlider" class="map-slider-modal">
+    <div class="slider-content">
+
+        <!-- 닫기 버튼 -->
+        <span class="close-slider" onclick="closeMapSlider()">&times;</span>
+
+        <!-- 슬라이드 이미지 -->
+        <img id="mapSlideImg" src="" class="map-slide-img">
+
+        <!-- 이전/다음 버튼 -->
+        <div class="slide-btn left" onclick="prevMap()">‹</div>
+        <div class="slide-btn right" onclick="nextMap()">›</div>
+
+        <!-- 번호 표시 -->
+        <div class="slide-index" id="mapIndex">1 / 6</div>
+    </div>
+</div>
 
 <!-- Confetti 라이브러리 -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
