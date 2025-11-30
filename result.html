@@ -197,6 +197,84 @@ async function shareStoryCardToInsta() {
         alert("⚠️ 모바일에서만 공유 가능합니다.");
     }
 }
+/* ---------------------------------------
+   지도 슬라이드 데이터 (6장)
+---------------------------------------- */
+const mapImages = [
+    "img/maps/map1.png",
+    "img/maps/map2.png",
+    "img/maps/map3.png",
+    "img/maps/map4.png",
+    "img/maps/map5.png",
+    "img/maps/map6.png"
+];
+
+let currentMapIndex = 0;
+
+/* 모달 열기 */
+function openMapSlider() {
+    currentMapIndex = 0;
+    updateMapSlide();
+    document.getElementById("mapSlider").style.display = "block";
+}
+
+/* 모달 닫기 */
+function closeMapSlider() {
+    document.getElementById("mapSlider").style.display = "none";
+}
+
+/* 이미지 업데이트 */
+function updateMapSlide() {
+    document.getElementById("mapSlideImg").src = mapImages[currentMapIndex];
+    document.getElementById("mapIndex").innerText =
+        `${currentMapIndex + 1} / ${mapImages.length}`;
+}
+
+/* 이전 */
+function prevMap() {
+    if (currentMapIndex > 0) currentMapIndex--;
+    updateMapSlide();
+}
+
+/* 다음 */
+function nextMap() {
+    if (currentMapIndex < mapImages.length - 1) currentMapIndex++;
+    updateMapSlide();
+}
+
+/* ---------------------------------------
+   스와이프(드래그) 지원
+---------------------------------------- */
+let touchStartX = 0;
+let touchEndX = 0;
+
+const slideImg = document.getElementById("mapSlideImg");
+
+/* 터치 시작 */
+slideImg.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+});
+
+/* 터치 종료 */
+slideImg.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe();
+});
+
+/* 스와이프 처리 */
+function handleSwipe() {
+    const distance = touchEndX - touchStartX;
+
+    if (Math.abs(distance) < 50) return; // 너무 짧으면 무시
+
+    if (distance > 0) {
+        // 오른쪽 → 이전 이미지
+        prevMap();
+    } else {
+        // 왼쪽 → 다음 이미지
+        nextMap();
+    }
+}
 
 </script>
 
