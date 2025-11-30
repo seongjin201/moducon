@@ -8,11 +8,9 @@ body {
     color: white;
     animation: bgmove 6s infinite alternate ease-in-out;
     display: flex;
-    flex-direction: column;   /* 🔥 위 → 아래 방향으로 배치 */
-    justify-content: flex-start; /* 🔥 위쪽부터 쌓기 */
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-}
-
 }
 
 @keyframes bgmove {
@@ -69,16 +67,19 @@ img {
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(255,255,255,0.4);
 }
+
 /* 글은 위쪽으로 */
 .top-section {
     padding-top: 40px;
 }
 
-/* 이미지는 아래쪽 정렬 */
+/* 이미지는 아래쪽 */
 .bottom-section {
     margin-top: 40px;
     margin-bottom: 40px;
 }
+
+/* 이미지 저장/공유 버튼 */
 .img-actions {
     margin-top: 20px;
     display: flex;
@@ -97,14 +98,11 @@ img {
 }
 
 /* 저장 버튼 */
-.save-btn {
-    background: #4CAF50;
-}
+.save-btn { background: #4CAF50; }
 
 /* 공유 버튼 */
-.share-btn {
-    background: #d62976; /* 인스타 느낌 */
-}
+.share-btn { background: #d62976; }
+
 /* 지도보기 플로팅 버튼 */
 .floating-map-btn {
     position: fixed;
@@ -116,7 +114,7 @@ img {
     border-radius: 10px;
     font-size: 16px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-    z-index: 999;
+    z-index: 3000;
     cursor: pointer;
 }
 
@@ -149,15 +147,6 @@ img {
     user-select: none;
 }
 
-/* 닫기 버튼 */
-.close-slider {
-    position: absolute;
-    top: 12px;
-    right: 16px;
-    font-size: 32px;
-    cursor: pointer;
-}
-
 /* 화살표 버튼 */
 .slide-btn {
     position: absolute;
@@ -178,7 +167,8 @@ img {
     font-size: 15px;
     color: #555;
 }
-/* 오른쪽 상단 고정 닫기 버튼 (모바일 최적화) */
+
+/* 오른쪽 상단 고정 닫기 */
 .map-close-btn {
     position: fixed;
     top: 18px;
@@ -186,38 +176,36 @@ img {
     z-index: 10000;
     width: 46px;
     height: 46px;
-    background: white;               /* ✔ 하얀 배경 */
-    color: black;                    /* ✔ 검정 X */
-    border-radius: 50%;              /* 둥근 버튼 */
-    font-size: 28px;                 /* 굵고 크게 */
-    font-weight: bold;               /* 더 선명하게 */
-    display: flex;
+    background: white;
+    color: black;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: bold;
+    display: none; /* 처음에는 숨김 */
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    user-select: none;
-    box-shadow: 0 0 12px rgba(0,0,0,0.25); /* ✔ 그림자 → 모바일에서 잘 보임 */
+    box-shadow: 0 0 12px rgba(0,0,0,0.25);
 }
 
-/* 닫기 버튼 누를 때 살짝 줄어드는 애니메이션 */
-.map-close-btn:active {
-    transform: scale(0.88);
-}
+.map-close-btn:active { transform: scale(0.88); }
+
 /* iOS 전용 미리보기 모달 */
 .ios-preview-modal {
     display: none;
     position: fixed;
-    z-index: 99999;
+    z-index: 200000;
     left: 0; top: 0;
     width: 100%; height: 100%;
     background: rgba(0,0,0,0.75);
+    justify-content: center;
+    align-items: center;
 }
 
 .ios-preview-content {
     width: 90%;
     max-width: 400px;
     background: white;
-    margin: 60px auto;
     padding: 18px;
     border-radius: 16px;
     text-align: center;
@@ -252,13 +240,3 @@ img {
 .ios-close-btn {
     background: #ddd;
 }
-#iosPreviewModal {
-    z-index: 200000 !important;
-}
-.ios-preview-modal {
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
-
-
