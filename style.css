@@ -190,27 +190,6 @@ img {
 
 .map-close-btn:active { transform: scale(0.88); }
 
-/* iOS 전용 미리보기 모달 */
-.ios-preview-modal {
-    display: none;
-    position: fixed;
-    z-index: 200000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.75);
-    justify-content: center;
-    align-items: center;
-}
-
-.ios-preview-content {
-    width: 90%;
-    max-width: 400px;
-    background: white;
-    padding: 18px;
-    border-radius: 16px;
-    text-align: center;
-}
-
 .ios-preview-text {
     font-size: 16px;
     margin-bottom: 12px;
@@ -220,16 +199,6 @@ img {
     width: 100%;
     border-radius: 12px;
     margin-bottom: 15px;
-}
-
-.ios-open-insta, .ios-close-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 10px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
 }
 
 .ios-open-insta {
