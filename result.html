@@ -198,14 +198,85 @@ async function shareStoryCardToInsta() {
     // iOS 처리: 인스타 바로 이동 금지
     if (os === "ios") {
 
-    // 지도 모달이 떠 있으면 닫아버림
     closeMapSlider();
-        
-    // 이미지 미리보기 모달 표시
-    document.getElementById("iosPreviewImg").src = imgData;
-    document.getElementById("iosPreviewModal").style.display = "flex";
+
+    const newTab = window.open("", "_blank");
+
+    const html = `
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    margin: 0;
+                    background: #000;
+                    color: white;
+                    text-align: center;
+                    font-family: Pretendard, sans-serif;
+                }
+
+                .preview-img {
+                    width: 100%;
+                    display: block;
+                    margin-top: 20px;
+                }
+
+                .btn-area {
+                    width: 100%;
+                    margin-top: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                .action-btn {
+                    width: 90%;
+                    padding: 14px;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+
+                .insta-btn {
+                    background: #d62976;
+                    color: white;
+                }
+
+                .close-btn {
+                    background: #333;
+                    color: white;
+                }
+
+            </style>
+        </head>
+        <body>
+
+            <p>📎 이미지를 꾹 눌러 저장하세요</p>
+            <img class="preview-img" src="${imgData}">
+
+            <div class="btn-area">
+                <button class="action-btn insta-btn" onclick="window.location.href='instagram://story-camera'">
+                    인스타그램 열기
+                </button>
+
+                <button class="action-btn close-btn" onclick="window.close()">
+                    닫기 ✕
+                </button>
+            </div>
+
+        </body>
+        </html>
+    `;
+
+    newTab.document.write(html);
+    newTab.document.close();
+
     return;
 }
+
     // Android는 기존처럼 인스타 바로 이동
     if (os === "android") {
         alert("📸 인스타그램 스토리 화면으로 이동합니다!");
