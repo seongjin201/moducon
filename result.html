@@ -197,12 +197,15 @@ async function shareStoryCardToInsta() {
 
     // iOS 처리: 인스타 바로 이동 금지
     if (os === "ios") {
-        // 이미지 미리보기 모달 표시
-        document.getElementById("iosPreviewImg").src = imgData;
-        document.getElementById("iosPreviewModal").style.display = "block";
-        return;
-    }
 
+    // 지도 모달이 떠 있으면 닫아버림
+    closeMapSlider();
+        
+    // 이미지 미리보기 모달 표시
+    document.getElementById("iosPreviewImg").src = imgData;
+    document.getElementById("iosPreviewModal").style.display = "block";
+    return;
+}
     // Android는 기존처럼 인스타 바로 이동
     if (os === "android") {
         alert("📸 인스타그램 스토리 화면으로 이동합니다!");
@@ -212,7 +215,7 @@ async function shareStoryCardToInsta() {
     }
 }
 function closeIOSPreview() {
-    document.getElementById("iosPreviewModal").style.display = "none";
+    document.getElementById("iosPreviewModal").style.display = "flex";
 }
 function openInstagram() {
     window.location.href = "instagram://story-camera";
