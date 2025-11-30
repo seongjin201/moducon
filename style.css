@@ -178,4 +178,27 @@ img {
     font-size: 15px;
     color: #555;
 }
+/* 오른쪽 상단 고정 닫기 버튼 */
+.map-close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* 닫기 버튼 누를 때 애니메이션 */
+.map-close-btn:active {
+    transform: scale(0.9);
+}
 
