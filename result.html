@@ -219,11 +219,13 @@ function openMapSlider() {
     currentMapIndex = 0;
     updateMapSlide();
     document.getElementById("mapSlider").style.display = "block";
+    document.querySelector(".map-close-btn").style.display = "flex";
 }
 
 /* 모달 닫기 */
 function closeMapSlider() {
     document.getElementById("mapSlider").style.display = "none";
+    document.querySelector(".map-close-btn").style.display = "none";
 }
 
 /* 이미지 업데이트 */
